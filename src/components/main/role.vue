@@ -4,7 +4,7 @@
             <el-breadcrumb-item :to="{ path: '/' }">
                 <a href="/">首页</a>
             </el-breadcrumb-item>
-            <el-breadcrumb-item>角色列 表</el-breadcrumb-item>
+            <el-breadcrumb-item>角色列表</el-breadcrumb-item>
         </el-breadcrumb>
 
         <el-button type="primary" @click="handleAdd">添加</el-button>

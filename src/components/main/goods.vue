@@ -114,7 +114,7 @@
                 </el-form-item>
 
                 <el-form-item label="商品规格名">
-                    <el-select v-model="ruleForm.specsid" @change="handleSpecsChange" filterable>
+                    <el-select v-model="ruleForm.specsid" @change="handleSpecsChange">
                         <el-option
                             v-for="item in specsarr"
                             :key="item.id"
@@ -125,7 +125,7 @@
                 </el-form-item>
 
                 <el-form-item label="商品规格值">
-                    <el-select v-model="ruleForm.specsattr">
+                    <el-select v-model="ruleForm.specsattr" multiple placeholder="请选择">
                         <el-option
                             v-for="item in specsattrs"
                             :key="item"
@@ -133,6 +133,15 @@
                             :value="item"
                         ></el-option>
                     </el-select>
+
+                    <!-- <el-select v-model="ruleForm.specsattr">
+                        <el-option
+                            v-for="item in specsattrs"
+                            :key="item"
+                            :label="item"
+                            :value="item"
+                        ></el-option>
+                    </el-select>-->
                 </el-form-item>
 
                 <el-form-item label="销售价">
@@ -230,8 +239,8 @@ export default {
                 price: "", //  price 商品价格
                 market_price: "", //market_price 市场价格
                 description: "", // description 商品描述
-                sepcsid: "", // sepcsid 商品规格编号
-                sepcsattr: "", // sepcsattr 商品规格属性
+                specsid: "", // sepcsid 商品规格编号
+                specsattr: "", // sepcsattr 商品规格属性
                 isnew: 1, // isnew 是否新品 1正常2禁用
                 ishot: 1, // ishot 是否热卖推荐 1正常2禁用
                 status: 1, // status 状态1正常2禁用
@@ -325,7 +334,7 @@ export default {
                 return d.id === this.ruleForm.specsid;
             });
             // 获取属性值
-            // console.log(nowselect,this.specsarr)
+            // console.log(nowselect.attrs)
             this.specsattrs = nowselect.attrs;
         },
 
@@ -382,14 +391,21 @@ export default {
                 .then((res) => {
                     let info = res.list;
                     info.id = row.id;
-                    this.ruleForm = info;
+                    info.specsattr = info.specsattr.split(",");
+
+                    // console.log(info);
                     this.getCategory();
                     this.getSpecs();
                     this.getCategory(this.ruleForm.first_cateid);
-
-                    this.fileList = [
-                        { name: "", url: "http://localhost:3000" + info.img },
-                    ];
+                    if (info.img !== "") {
+                        this.fileList = [
+                            {
+                                name: "",
+                                url: "http://localhost:3000" + info.img,
+                            },
+                        ];
+                    }
+                    this.ruleForm = info;
                 });
 
             this.dialogFormVisible = true;
@@ -418,7 +434,9 @@ export default {
         handleSubmit() {
             this.dialogFormVisible = false;
 
-            // let url = this.ruleForm.id ? "/api/useredit" : "/api/useradd";
+            let url = this.ruleForm.id ? "/api/goodsedit" : "/api/goodsadd";
+
+            this.ruleForm.specsattr = this.ruleForm.specsattr.join(",");
 
             let data = new FormData();
 
@@ -428,7 +446,7 @@ export default {
 
             axios({
                 method: "post",
-                url: "/api/goodsadd",
+                url,
                 data,
                 headers: {
                     Authorization: sessionStorage.getItem("token"),
