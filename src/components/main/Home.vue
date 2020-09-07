@@ -1,8 +1,67 @@
 <template>
     <div>
-        <h1>首页</h1>
+        <el-row :gutter="10">
+            <el-col :span="2">
+                <div class="grid-content bg-purple"></div>
+            </el-col>
+            <el-col :span="10">
+                <div class="grid-content bg-purple bjcolor">
+                    <el-container>
+                        <el-header class="HeaderM">商品总览</el-header>
+                        <el-main class="flexS">
+                            <div class="fl">
+                                <p>100</p>
+                                <p>已下架</p>
+                            </div>
+                            <div class="fl">
+                                <p>100</p>
+                                <p>已下架</p>
+                            </div>
+                            <div class="fl">
+                                <p>100</p>
+                                <p>已下架</p>
+                            </div>
+                            <div class="fl">
+                                <p>100</p>
+                                <p>已下架</p>
+                            </div>
+                        </el-main>
+                    </el-container>
+                </div>
+            </el-col>
+            <el-col :span="10">
+                <div class="grid-content bg-purple bjcolor">
+                    <el-container>
+                        <el-header class="HeaderM">用户总览</el-header>
+                        <el-main class="flexS">
+                            <div class="fl">
+                                <p>100</p>
+                                <p>已下架</p>
+                            </div>
+                            <div class="fl">
+                                <p>100</p>
+                                <p>已下架</p>
+                            </div>
+                            <div class="fl">
+                                <p>100</p>
+                                <p>已下架</p>
+                            </div>
+                            <div class="fl">
+                                <p>100</p>
+                                <p>已下架</p>
+                            </div>
+                        </el-main>
+                    </el-container>
+                </div>
+            </el-col>
+            <el-col :span="2">
+                <div class="grid-content bg-purple"></div>
+            </el-col>
+        </el-row>
 
-        <div id="main" style="width: 880px;height:520px;"></div>
+        <div class="box-main">
+            <div id="main" style="width: 1000px;height:400px;"></div>
+        </div>
     </div>
 </template>
 
@@ -50,3 +109,36 @@ export default {
     methods: {},
 };
 </script>
+
+<style>
+.box-main {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+.HeaderM {
+    line-height: 60px;
+    background: #f2f6fc;
+}
+.flexS {
+    display: flex;
+}
+.fl {
+    flex: 1;
+    height: auto;
+    text-align: center;
+    /* border: 1px solid red; */
+}
+
+.bg-purple {
+    border: 1px solid transparent;
+}
+.bjcolor {
+    height: 200px;
+    border: 1px solid #000;
+}
+/* .home-bj {
+    margin: 0;
+    background: #e5e5e5;
+} */
+</style>

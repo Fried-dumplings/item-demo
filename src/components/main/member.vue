@@ -26,12 +26,18 @@
 
         <!-- 弹窗 -->
         <el-dialog :title="'规格'+tip" :visible.sync="dialogFormVisible" width="50%" @close="close">
-            <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form
+                :model="ruleForm"
+                :rules="rules"
+                ref="ruleForm"
+                label-width="100px"
+                class="demo-ruleForm"
+            >
                 <el-form-item label="昵称">
                     <el-input v-model="ruleForm.nickname" :disabled="true"></el-input>
                 </el-form-item>
 
-                <el-form-item label="手机号">
+                <el-form-item label="手机号" prop="phone">
                     <el-input v-model="ruleForm.phone"></el-input>
                 </el-form-item>
 
@@ -45,7 +51,7 @@
 
                 <el-form-item>
                     <el-button @click="dialogFormVisible = false">取消</el-button>
-                    <el-button type="primary" @click="handleSubmit">确定</el-button>
+                    <el-button type="primary" @click="handleSubmit('ruleForm')">确定</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -82,6 +88,22 @@ export default {
                 password: "",
                 // 状态1正常2禁用
                 status: "1",
+            },
+
+            rules: {
+                phone: [
+                    {
+                        required: true,
+                        message: "请输入手机号",
+                        trigger: "blur",
+                    },
+                    {
+                        min: 11,
+                        max: 11,
+                        message: "请输入11位的手机号",
+                        trigger: "blur",
+                    },
+                ],
             },
         };
     },
@@ -146,32 +168,38 @@ export default {
                     },
                 })
                 .then((res) => {
-                    console.log(res);
                     let info = res.list;
-                    info.password = "";
+                    info.password = null;
                     this.ruleForm = info;
                 });
         },
         //提交
-        handleSubmit() {
-            this.dialogFormVisible = false;
-            //获取选中的权限/数组
-
-            this.$http.post("/api/memberedit", this.ruleForm).then((res) => {
-                // 向后台提交数据
-                // console.log(res);
-                if (res.code == 200) {
-                    this.$message({
-                        type: "success",
-                        message: res.msg,
-                    });
-                    //获取角色列表/渲染
-                    this.getMemberlist();
+        handleSubmit(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.dialogFormVisible = false;
+                    //获取选中的权限/数组
+                    this.$http
+                        .post("/api/memberedit", this.ruleForm)
+                        .then((res) => {
+                            // 向后台提交数据
+                            // console.log(res);
+                            if (res.code == 200) {
+                                this.$message({
+                                    type: "success",
+                                    message: res.msg,
+                                });
+                                //获取角色列表/渲染
+                                this.getMemberlist();
+                            } else {
+                                this.$message({
+                                    type: "warn",
+                                    message: res.msg,
+                                });
+                            }
+                        });
                 } else {
-                    this.$message({
-                        type: "warn",
-                        message: res.msg,
-                    });
+                    console.log(11111);
                 }
             });
         },

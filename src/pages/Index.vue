@@ -9,7 +9,7 @@
                     <span>{{user}}</span>
                     <a href="javascript:;" @click="leave">退出</a>
                 </el-header>
-                <el-main>
+                <el-main class="bj">
                     <router-view></router-view>
                 </el-main>
             </el-container>
@@ -77,5 +77,8 @@ export default {
 .menubox
     width 100%
     height 100%
+.bj
+    margin 0
+    background #e5e5e5
 </style>
 
