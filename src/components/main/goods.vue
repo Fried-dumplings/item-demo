@@ -38,7 +38,13 @@
         ></el-pagination>-->
 
         <!-- 弹窗 -->
-        <el-dialog title="角色" :visible.sync="dialogFormVisible" width="50%" @close="close">
+        <el-dialog
+            title="角色"
+            :visible.sync="dialogFormVisible"
+            width="50%"
+            @close="close"
+            @opened="handleOpen"
+        >
             <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="一级分类">
                     <el-select
@@ -133,15 +139,6 @@
                             :value="item"
                         ></el-option>
                     </el-select>
-
-                    <!-- <el-select v-model="ruleForm.specsattr">
-                        <el-option
-                            v-for="item in specsattrs"
-                            :key="item"
-                            :label="item"
-                            :value="item"
-                        ></el-option>
-                    </el-select>-->
                 </el-form-item>
 
                 <el-form-item label="销售价">
@@ -162,6 +159,12 @@
                     <el-radio v-model="ruleForm.ishot" :label="2">否</el-radio>
                 </el-form-item>
 
+                <el-form-item label="商品描述">
+                    <div id="editor" ref="editorElem"></div>
+                    <!-- <el-radio v-model="ruleForm.ishot" :label="1">是</el-radio>
+                    <el-radio v-model="ruleForm.ishot" :label="2">否</el-radio>-->
+                </el-form-item>
+
                 <el-form-item label="状态">
                     <el-radio v-model="ruleForm.status" :label="1">上架</el-radio>
                     <el-radio v-model="ruleForm.status" :label="2">下架</el-radio>
@@ -178,6 +181,8 @@
 
 <script>
 import axios from "axios";
+import E from "wangeditor";
+
 export default {
     data() {
         return {
@@ -223,6 +228,9 @@ export default {
 
             // //状态
             // status: true,
+
+            editor: null,
+            description: "",
         };
     },
     mounted() {
@@ -256,6 +264,23 @@ export default {
             this.specsattrs = [];
             //清除照片墙
             this.fileList = [];
+        },
+
+        // 打开对话框， 富文本编辑
+        handleOpen() {
+            //!!!一定要在弹窗打开后才能绑定  否则找不到弹窗内的html节点 弹窗是懒渲染
+
+            //绑定富文本编辑框
+            this.editor = new E("#editor");
+            // 2.绑定用户的输入操作事件：  html 用户输入的内容
+            this.editor.customConfig.onchange = (html) => {
+                // 将用户输入的内容和 表单描述绑定
+                this.ruleForm.description = html;
+            };
+            //3. 创建富文本编辑器
+            this.editor.create();
+            // 富文本编辑框预设文字
+            this.editor.txt.html(this.ruleForm.description);
         },
 
         // 商品列表/渲染
@@ -393,7 +418,6 @@ export default {
                     info.id = row.id;
                     info.specsattr = info.specsattr.split(",");
 
-                    // console.log(info);
                     this.getCategory();
                     this.getSpecs();
                     this.getCategory(this.ruleForm.first_cateid);

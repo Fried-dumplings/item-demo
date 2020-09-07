@@ -72,7 +72,7 @@ export default {
         return {
             tip: "",
             dialogFormVisible: false,
-            pageSize: 10, //可配置项 //每页显示条目个数
+            pageSize: 5, //可配置项 //每页显示条目个数
             //总条目数
             total: 0,
 
@@ -102,7 +102,7 @@ export default {
                 })
                 .then((res) => {
                     if (res.code == 200) {
-                        console.log(res);
+                        // console.log(res);
                         this.specslist = res.list || [];
                     } else {
                         this.$message({
